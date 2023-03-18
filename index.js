@@ -33,14 +33,18 @@ app.post('/api/shorturl',async (req,res)=>{
     const validUrl = new URL(originalUrl)
     dns.lookup(validUrl.host,async (err,addr,family)=>{
       if(err){
+        console.log(err);
         console.log(`Invalid URL :${originalUrl}`);
+        res.statusCode = 404;
         res.json({'error':'invalid url'});
+        return;
       }
    const urlMeta = await  getShortUrl({original_url:originalUrl,ipAddress:addr,family:family})
    urlMeta ? res.json(urlMeta) : res.status(500);
     })
   }catch(e){
     console.log(`Invalid URL :${originalUrl}`);
+    res.statusCode = 404;
     res.json({'error':'invalid url'});
   }
 })
